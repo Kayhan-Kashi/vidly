@@ -6,28 +6,6 @@ class Movies extends Component {
     movies: getMovies(),
   };
 
-  //   getTableRows() {
-  //     return this.state.movies.map((m) => (
-  //       <tr>
-  //         <td key={m._id}>{m.title}</td>
-  //         <td key={m._id}>{m.genre}</td>
-  //         <td key={m._id}>{m.stock}</td>
-  //         <td key={m._id}>{m.dailyRentalRate}</td>
-  //       </tr>
-  //     ));
-  //   }
-
-  //   getTableRowsAlt() {
-  //     return this.state.movies.map((movie) => (
-  //       <tr>
-  //         <td key={movie._id}>{movie.title}</td>
-  //         <td key={movie._id}>{movie.genre}</td>
-  //         <td key={movie._id}>{movie.title}</td>
-  //         <td key={movie._id}>{movie.title}</td>
-  //       </tr>
-  //     ));
-  //   }
-
   handleDelete = (movie) => {
     const movies = this.state.movies.filter((m) => m._id != movie._id);
     this.setState({ movies });
