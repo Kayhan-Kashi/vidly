@@ -12,8 +12,11 @@ class Movies extends Component {
   };
 
   render() {
+    const { length: count } = this.state.movies;
+    if (count === 0) return <p>There is no movie in the database.</p>;
     return (
       <React.Fragment>
+        <p>There are {count} movies in the database.</p>
         <table className="table">
           <thead>
             <tr>
