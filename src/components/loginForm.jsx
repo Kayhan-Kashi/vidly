@@ -29,7 +29,7 @@ class LoginForm extends Form {
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("username", "Username")}
           {this.renderInput("password", "Password", "password")}
-          {this.renderButton("label")}
+          {this.renderButton("login")}
         </form>
       </div>
     );
