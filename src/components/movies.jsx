@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import MoviesTable from "./moviesTable";
 import Pagination from "./common/pagination.jsx";
-import { getMovies } from "../services/fakeMovieService.js";
-import { getGenres } from "../services/fakeGenreService.js";
+import { getMovies, deleteMovie } from "../services/movieService";
+import { toast } from "react-toastify";
+import { getGenres } from "../services/genreService";
 import { paginate } from "../utils/paginate";
 import ListGroup from "./common/listGroup";
 import { Link } from "react-router-dom";
@@ -20,14 +21,28 @@ class Movies extends Component {
     sortColumn: { path: "title", order: "asc" },
   };
 
-  componentDidMount() {
-    const genres = [{ _id: "", name: "All genres" }, ...getGenres()];
-    this.setState({ movies: getMovies(), genres });
+  async componentDidMount() {
+    const { data } = await getGenres();
+    const genres = [{ _id: "", name: "All genres" }, ...data];
+
+    const { data: movies } = await getMovies();
+    this.setState({ movies, genres });
   }
 
-  handleDelete = (movie) => {
-    const movies = this.state.movies.filter((m) => m._id !== movie._id);
+  handleDelete = async (movie) => {
+    const originalMovies = this.state.movies;
+    const movies = originalMovies.filter((m) => m._id !== movie._id);
     this.setState({ movies });
+
+    try {
+      await deleteMovie(movie._id);
+      console.log("try entered");
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        toast.error("This movie has been already deleted.");
+
+      this.setState({ movies: originalMovies });
+    }
   };
 
   handleLike = (movie) => {
@@ -86,15 +101,15 @@ class Movies extends Component {
 
     const { totalCount, data: movies, searchQuery } = this.getPagedData();
     return (
-      <div class="row">
-        <div class="col-3">
+      <div className="row">
+        <div className="col-3">
           <ListGroup
             items={this.state.genres}
             selectedItem={this.state.selectedGenre}
             onItemSelect={this.handleGenreSelect}
           />
         </div>
-        <div class="col">
+        <div className="col">
           <Link
             to="/movies/new"
             className="btn btn-primary"
